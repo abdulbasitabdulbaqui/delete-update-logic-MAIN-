@@ -10,6 +10,7 @@ function App() {
   const [email, setEmail] = useState("");
   const [number, setNumber] = useState("");
   const [submitData, setSubmitData] = useState([]);
+  const [id, setId] = useState("");
   const handleName = (e) => {
     setName(e.target.value);
   };
@@ -20,30 +21,52 @@ function App() {
     setNumber(e.target.value);
   };
   const handleSubmit = (e) => {
-    e.preventDefault();
-    setSubmitData([...submitData, { id: Date.now(), name, email, number }]);
-    setEmail("");
-    setName("");
-    setNumber("");
-  };
+  e.preventDefault();
+
+  // If no ID => add new
+  if (!id) {
+    setSubmitData([
+      ...submitData,
+      { id: Date.now(), name, email, number }
+    ]);
+  } 
+  // If ID exists => update
+  else {
+    const updated = submitData.map((item) =>
+      item.id === id
+        ? { ...item, name, email, number }
+        : item
+    );
+    setSubmitData(updated);
+    setId(""); // exit edit mode
+  }
+
+  // Reset fields
+  setName("");
+  setEmail("");
+  setNumber("");
+};
+
   const handleDelete = (id) => {
     const dt = submitData.filter((res) => res.id !== id);
     setSubmitData(dt);
   };
   const handleEdit = (id) => {
-    const dtt = submitData.filter((res) => res.id === id);
-    if (dtt !== undefined) {
-      setName(dtt[0].name);
-      setNumber(dtt[0].number);
-      setEmail(dtt[0].email);
-    }
-  };
+  const record = submitData.find((item) => item.id === id);
+  if (record) {
+    setName(record.name);
+    setEmail(record.email);
+    setNumber(record.number);
+    setId(record.id); // important!
+  }
+};
+
   return (
     <>
       <div
         className="container"
         style={{
-          height: "90vh",
+          height: "100vh",
           width: "70vh",
           backgroundColor: "#6c757d",
           padding: "10px",
@@ -96,43 +119,48 @@ function App() {
           </div>
         </form>
         <br />
-        <table
-          className="table table-striped table-bordered table-hover "
-          style={{ backgroundColor: "white", borderRadius: "10px" }}
+        <div
+          className="table-responsive"
+          style={{ maxHeight: "199px", overflowY: "auto", overflowX: "auto" }} //For scroll bar
         >
-          <thead>
-            <tr>
-              <th className="ml-4">NAME</th>
-              <th>EMAIL</th>
-              <th>NUMBER</th>
-              <th>Delete</th>
-              <th>Edit</th>
-            </tr>
-          </thead>
-          {submitData.map((res) => (
-            <tr>
-              <td>{res.name}</td>
-              <td>{res.email}</td>
-              <td>{res.number}</td>
-              <td>
-                <button
-                  onClick={() => handleDelete(res.id)}
-                  className="btn btn-danger"
-                >
-                  Delete
-                </button>
-              </td>
-              <td>
-                <button
-                  onClick={() => handleEdit(res.id)}
-                  className="btn btn-warning"
-                >
-                  Edit
-                </button>
-              </td>
-            </tr>
-          ))}
-        </table>
+          <table
+            className="table table-striped table-bordered table-hover "
+            style={{ backgroundColor: "white", borderRadius: "10px" }}
+          >
+            <thead>
+              <tr>
+                <th className="ml-4">NAME</th>
+                <th>EMAIL</th>
+                <th>NUMBER</th>
+                <th>Delete</th>
+                <th>Edit</th>
+              </tr>
+            </thead>
+            {submitData.map((res) => (
+              <tr>
+                <td>{res.name}</td>
+                <td>{res.email}</td>
+                <td>{res.number}</td>
+                <td>
+                  <button
+                    onClick={() => handleDelete(res.id)}
+                    className="btn btn-danger"
+                  >
+                    Delete
+                  </button>
+                </td>
+                <td>
+                  <button
+                    onClick={() => handleEdit(res.id)}
+                    className="btn btn-warning"
+                  >
+                    Edit
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </table>
+        </div>
       </div>
     </>
   );
