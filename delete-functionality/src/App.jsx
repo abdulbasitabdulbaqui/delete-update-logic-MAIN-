@@ -98,14 +98,14 @@ function App() {
                 />
                 <label for="email">EMAIL:</label>
                 <input
-                  type="text"
+                  type="email"
                   placeholder="enter your email"
                   value={email}
                   onChange={handleEmail}
                 />
                 <label for="number">NUMBER:</label>
                 <input
-                  type="text"
+                  type="number"
                   placeholder="enter your number"
                   value={number}
                   onChange={handleNumber}
