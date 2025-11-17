@@ -119,7 +119,7 @@ function App() {
           <br />
           <div
             className="table-responsive"
-            style={{ maxHeight: "199px", overflowY: "auto", overflowX: "auto" }} //For scroll bar
+            style={{ maxHeight: "50vh", overflowY: "auto", overflowX: "auto" }} //For scroll bar
           >
             <table
               className="table table-striped table-bordered table-hover "
