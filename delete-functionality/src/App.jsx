@@ -4,7 +4,8 @@ import viteLogo from "/vite.svg";
 import "./App.css";
 import Button from "react-bootstrap/Button";
 import Table from "react-bootstrap/Table";
-
+import "bootstrap/dist/js/bootstrap.bundle.min.js";
+import Form from "react-bootstrap/Form";
 function App() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -24,30 +25,47 @@ function App() {
     setName(value);
     if (value.length < 3) {
       setNameError("Name must be at least 3 characters long");
+      return;
     } else if (value.length > 25) {
       setNameError("Name must not have more then 25 characters");
+      return;
     } else {
       setNameError("");
     }
+  
   };
   const handleEmail = (e) => {
     setEmail(e.target.value);
     let value = e.target.value;
     setEmailError(isValidateEmail(value) ? "" : "Invalid Email Address");
+    return;
   };
   const handleNumber = (e) => {
     setNumber(e.target.value);
     let value = e.target.value;
     if (value.length < 10) {
       setNumberError("number must have 10 digits");
+      return;
     } else if (value.length > 10) {
       setNumberError("number must have 10 digits");
+      return;
     } else {
       setNumberError("");
     }
+    return;
   };
   const handleSubmit = (e) => {
     e.preventDefault();
+     if (nameError || emailError || numberError) {
+       alert("Fix all errors before submitting!");
+      return;
+    }
+
+    if (!name || !email || !number) {
+      alert("Inputs Are Should Not Be Empty");
+      return;
+
+    }
     // If no ID => add new
     if (!id) {
       setSubmitData([...submitData, { id: Date.now(), name, email, number }]);
@@ -70,6 +88,7 @@ function App() {
       setEmail("");
       setEmailError("");
     }
+   
   };
   const handleDelete = (id) => {
     const dt = submitData.filter((res) => res.id !== id);
@@ -99,8 +118,8 @@ function App() {
         <h1 style={{ background: "", marginTop: "10px", borderRadius: "5px" }}>
           User Form
         </h1>
-        <form action="submit" onSubmit={handleSubmit}>
-          <div>
+        <Form action="submit" onSubmit={handleSubmit}>
+          <div className="form-group">
             <div
               className="form-control"
               style={{
@@ -130,6 +149,7 @@ function App() {
                 onChange={handleEmail}
               />
               {emailError && <p style={{ color: "red" }}>{emailError}</p>}
+
               <label for="number">NUMBER:</label>
               <input
                 type="number"
@@ -141,13 +161,13 @@ function App() {
               <button className="btn btn-success mt-3">submit</button>
             </div>
           </div>
-        </form>
+        </Form>
         <br />
         <div
           className="table-responsive"
-          style={{ maxHeight: "30vh", overflowY: "auto", overflowX: "auto" }} //For scroll bar
+          style={{ maxHeight: "25vh", overflowY: "auto", overflowX: "auto" }} //For scroll bar
         >
-          <table
+          <Table
             className="table table-striped table-bordered table-hover "
             style={{ backgroundColor: "white", borderRadius: "10px" }}
           >
@@ -184,7 +204,7 @@ function App() {
                 </tr>
               ))}
             </tbody>
-          </table>
+          </Table>
         </div>
       </div>
     </>
